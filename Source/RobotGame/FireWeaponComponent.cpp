@@ -3,7 +3,9 @@
 
 #include "FireWeaponComponent.h"
 #include "WeaponProjectile.h"
+#include "RobotGameCharacter.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
 #include "Camera/CameraComponent.h"
 
 
@@ -62,6 +64,14 @@ void UFireWeaponComponent::SpawnProjectile()
 		Loc.X += ForwardVector.X * 80;
 		Loc.Y += ForwardVector.Y * 80;
 		Loc.Z += 50;
+
+
+		if (PlayerPawn->GetWeaponMesh()) {
+			Loc = PlayerPawn->GetWeaponMesh()->GetSocketLocation("ProjectileSocket");
+		}
+
+
+
 		// -----
 		
 		// Get Actor Rotation Vector.
