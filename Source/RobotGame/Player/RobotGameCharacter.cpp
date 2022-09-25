@@ -47,7 +47,7 @@ ARobotGameCharacter::ARobotGameCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
-	WeaponMesh->SetupAttachment(GetMesh(), TEXT(""));
+	WeaponMesh->SetupAttachment(GetMesh(), TEXT("hand_r_socket"));
 
 	InteractionCheckDistance = 10000.f;
 	

@@ -143,6 +143,7 @@ public:
 	FORCEINLINE FName GetFiringSocket() const { return FiringSocket;}
 
 	// Gets the SkeletalMesh of the weapon
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE class USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
 
 	virtual void Tick(float DeltaTime) override;
