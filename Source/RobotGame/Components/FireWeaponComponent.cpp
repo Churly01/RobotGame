@@ -63,8 +63,6 @@ void UFireWeaponComponent::SpawnProjectile(FRotator PlayerRotation)
 			Loc = PlayerPawn->GetWeaponMesh()->GetSocketLocation("ProjectileSocket");
 		}
 
-
-		UE_LOG(LogTemp,Warning, TEXT("SPAWNING PROJECTILE"))
 		AWeaponProjectile* ProjectileToSpawn = World->SpawnActor<AWeaponProjectile>(ProjectileClass, Loc, PlayerRotation,SpawnParams);
 
 

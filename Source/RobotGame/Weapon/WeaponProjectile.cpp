@@ -19,6 +19,11 @@ AWeaponProjectile::AWeaponProjectile()
 
 	bReplicates = true;
 	SetReplicateMovement(true);
+
+	// Default damages
+
+	AreaDamage = 100;
+	PointDamage = 100;
 }
 
 // Called when the game starts or when spawned

@@ -26,11 +26,29 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	class UStaticMeshComponent* ProjectileMesh;
 
+	// Damage type to be done by the projectile
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageType> ProjectileDamageType;
+
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UProjectileMovementComponent* GetProjectileMovementComponent() const { return ProjectileMovement; }
 
+	UPROPERTY(EditDefaultsOnly)
+	float PointDamage;
+
+	UPROPERTY(EditDefaultsOnly)
+	float AreaDamage;
+
+	UFUNCTION(BlueprintCallable)
+	float GetPointDamage() const{return PointDamage;}
+
+
+	UFUNCTION(BlueprintCallable)
+	float GetAreaDamage() const { return AreaDamage; }
 
 };

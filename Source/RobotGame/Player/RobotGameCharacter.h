@@ -49,6 +49,9 @@ class ARobotGameCharacter : public ACharacter
 public:
 	ARobotGameCharacter();
 
+
+	void GetLifetimeReplicatedProps  (TArray<FLifetimeProperty>& OutLifetimeProps)const override;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
@@ -154,5 +157,19 @@ public:
 	void ServerFireWeapon(FRotator PlayerRotation);
 
 	void Fire();
+
+	UPROPERTY(ReplicatedUsing = OnRepHealth)
+	float Health;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MaxHealth;
+
+	UFUNCTION()
+	void OnRepHealth();
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
+	
+	UFUNCTION(BlueprintCallable)
+	float ModifyHealth(float Damage);
 };
 

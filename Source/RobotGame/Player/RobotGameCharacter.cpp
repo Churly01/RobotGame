@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "../Components/FireWeaponComponent.h"
 #include "../Components/InteractionComponent.h"
 
@@ -52,9 +53,23 @@ ARobotGameCharacter::ARobotGameCharacter()
 	InteractionCheckDistance = 10000.f;
 	
 	WeaponComponent = CreateDefaultSubobject<UFireWeaponComponent>("FireWeaponComponent");
+
+
+	// Health Defaults
+
+	MaxHealth = 100;
+	Health = 100;
 }
 
 
+
+void ARobotGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//Replicate Health
+	DOREPLIFETIME(ARobotGameCharacter, Health);
+}
 
 bool ARobotGameCharacter::IsInteracting()
 {
@@ -98,6 +113,46 @@ void ARobotGameCharacter::ServerFireWeapon_Implementation(FRotator PlayerRotatio
 void ARobotGameCharacter::Fire()
 {
 	FireWeapon(GetFollowCamera()->GetComponentRotation());
+}
+
+void ARobotGameCharacter::OnRepHealth()
+{
+
+}
+
+float ARobotGameCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float DamageGiven = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	
+	ModifyHealth(-DamageGiven);
+
+	return DamageGiven;
+}
+
+float ARobotGameCharacter::ModifyHealth(float HealthDelta)
+{
+	Health += HealthDelta;
+	
+	float ActualHealthDelta;
+
+	if (Health <= 0)
+	{
+
+		// TODO Death of character
+		UE_LOG(LogTemp, Warning, TEXT("DEAD"))
+		ActualHealthDelta = HealthDelta - Health;
+		UE_LOG(LogTemp,Warning, TEXT("DEAD"))
+	}
+
+	if(Health > MaxHealth)
+	{
+		ActualHealthDelta = Health - MaxHealth;
+		Health = MaxHealth;
+	}
+
+	// TODO Health Refreshing in Widget
+
+	return HealthDelta;
 }
 
 void ARobotGameCharacter::PerformInteractionCheck()
