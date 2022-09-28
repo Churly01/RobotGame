@@ -30,6 +30,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UDamageType> ProjectileDamageType;
 
+	ARobotGameCharacter* Owner;
 
 
 public:	
@@ -51,4 +52,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetAreaDamage() const { return AreaDamage; }
 
+	UFUNCTION(BlueprintCallable)
+	ARobotGameCharacter* GetPlayerShooter() const {return Owner;}
 };

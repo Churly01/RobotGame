@@ -171,5 +171,20 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	float ModifyHealth(float Damage);
+
+	UFUNCTION(BlueprintCallable)
+	float GetHealthPercentage();
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetMaxHealth() const {return MaxHealth;}
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetHealth() const { return Health; }
+
+	UPROPERTY(ReplicatedUsing = OnRepKiller)
+	ARobotGameCharacter* Killer;
+
+	UFUNCTION()
+	void OnRepKiller();
 };
 

@@ -62,7 +62,7 @@ void UFireWeaponComponent::SpawnProjectile(FRotator PlayerRotation)
 		if (PlayerPawn->GetWeaponMesh()) {
 			Loc = PlayerPawn->GetWeaponMesh()->GetSocketLocation("ProjectileSocket");
 		}
-
+		SpawnParams.Owner = GetOwner();
 		AWeaponProjectile* ProjectileToSpawn = World->SpawnActor<AWeaponProjectile>(ProjectileClass, Loc, PlayerRotation,SpawnParams);
 
 

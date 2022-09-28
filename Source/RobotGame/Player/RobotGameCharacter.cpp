@@ -69,6 +69,7 @@ void ARobotGameCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 	//Replicate Health
 	DOREPLIFETIME(ARobotGameCharacter, Health);
+	DOREPLIFETIME(ARobotGameCharacter, Killer);
 }
 
 bool ARobotGameCharacter::IsInteracting()
@@ -137,11 +138,10 @@ float ARobotGameCharacter::ModifyHealth(float HealthDelta)
 
 	if (Health <= 0)
 	{
+		Killer = this;
 
-		// TODO Death of character
-		UE_LOG(LogTemp, Warning, TEXT("DEAD"))
 		ActualHealthDelta = HealthDelta - Health;
-		UE_LOG(LogTemp,Warning, TEXT("DEAD"))
+		
 	}
 
 	if(Health > MaxHealth)
@@ -153,6 +153,23 @@ float ARobotGameCharacter::ModifyHealth(float HealthDelta)
 	// TODO Health Refreshing in Widget
 
 	return HealthDelta;
+}
+
+float ARobotGameCharacter::GetHealthPercentage()
+{
+	
+	return Health/MaxHealth;
+}
+
+
+void ARobotGameCharacter::OnRepKiller()
+{
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	SetReplicateMovement(false);
 }
 
 void ARobotGameCharacter::PerformInteractionCheck()

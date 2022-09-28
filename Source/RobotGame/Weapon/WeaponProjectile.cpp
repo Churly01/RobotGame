@@ -24,12 +24,15 @@ AWeaponProjectile::AWeaponProjectile()
 
 	AreaDamage = 100;
 	PointDamage = 100;
+
+	
 }
 
 // Called when the game starts or when spawned
 void AWeaponProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
 	
 }
 
