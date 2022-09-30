@@ -5,6 +5,7 @@
 #include "../Weapon/WeaponProjectile.h"
 #include "../Player/RobotGameCharacter.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Camera/CameraComponent.h"
 
@@ -44,6 +45,10 @@ void UFireWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UFireWeaponComponent::SpawnProjectile(FRotator PlayerRotation)
 {
+	if(!CanFire())
+	{
+		return;
+	}
 	UWorld* World = GetWorld();
 	if (ProjectileClass && PlayerPawn && World)
 	{
@@ -74,6 +79,7 @@ void UFireWeaponComponent::SpawnProjectile(FRotator PlayerRotation)
 
 bool UFireWeaponComponent::CanFire()
 {
-	return true;
+	bool IsFalling = PlayerPawn->GetMovementComponent()->IsFalling();
+	return !IsFalling;
 }
 
