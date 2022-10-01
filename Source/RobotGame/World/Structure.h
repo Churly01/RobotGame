@@ -19,13 +19,31 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* StructureMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UFireWeaponComponent* Weapon;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UAIPerceptionStimuliSourceComponent* AIPerceptionComponent;
 public:	
 	
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	UStaticMeshComponent* Building;
+
+	UPROPERTY(ReplicatedUsing = OnRepHealth)
 	float Health;
+	
+	UPROPERTY(EditDefaultsOnly)
+	float DamagePerHit;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void OnRepHealth();
 
 
 };
