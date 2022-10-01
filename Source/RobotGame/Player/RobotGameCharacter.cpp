@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "RobotGameCharacter.h"
+#include "../RobotGame.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -139,7 +140,7 @@ float ARobotGameCharacter::ModifyHealth(float HealthDelta)
 	if (Health <= 0)
 	{
 		Killer = this;
-
+		OnRepKiller();
 		ActualHealthDelta = HealthDelta - Health;
 		
 	}
@@ -164,12 +165,12 @@ float ARobotGameCharacter::GetHealthPercentage()
 
 void ARobotGameCharacter::OnRepKiller()
 {
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(PROJECTILE_COLLISION, ECR_Ignore);
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
-	SetReplicateMovement(false);
+
+
 }
 
 void ARobotGameCharacter::PerformInteractionCheck()

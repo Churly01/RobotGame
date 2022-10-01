@@ -67,7 +67,6 @@ void UInteractionComponent::BeginFocus(class ARobotGameCharacter* Character)
 
 	OnBeginFocus.Broadcast(Character);
 	SetHiddenInGame(false);
-
 	//If we are not the server, then set render custom depth for each visual component.
 	if (GetNetMode() != NM_DedicatedServer)
 	{

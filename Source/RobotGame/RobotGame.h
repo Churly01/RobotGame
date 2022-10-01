@@ -3,3 +3,4 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#define PROJECTILE_COLLISION ECC_GameTraceChannel1 
