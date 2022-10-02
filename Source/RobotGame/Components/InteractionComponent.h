@@ -77,7 +77,6 @@ protected:
 		TArray<class ARobotGameCharacter*> Interactors;
 
 
-
 public:
 
 
