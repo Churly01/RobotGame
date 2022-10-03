@@ -31,11 +31,11 @@ UCard* ARobotGamePlayerController::GetNextCard()
 void ARobotGamePlayerController::UseCard(UCardSlotWidget* Slot)
 {
 
-	// Spawn Card
+	// TODO Spawn Card
 
-	// Queue back the card.
+	// TODO Queue back the card.
 
-	// Get Next Card for the slot from the queue
+	// TODO Get Next Card for the slot from the queue
 
 	
 }
@@ -59,7 +59,9 @@ void ARobotGamePlayerController::SetDeck(TArray<UCard*> NewDeck)
 }
 
 void ARobotGamePlayerController::SetSlot(UCardSlotWidget* Slot)
-{
+{ 
+
+	// TODO Check for null (Should not be null?) 
 	if (Slot && Slot->CardOnDisplay) 
 	{
 		Slots.Add(Slot);
