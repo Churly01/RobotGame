@@ -60,8 +60,12 @@ void ARobotGamePlayerController::SetDeck(TArray<UCard*> NewDeck)
 
 void ARobotGamePlayerController::SetSlot(UCardSlotWidget* Slot)
 {
-	Slots.Add(Slot);
-	UCard* NextCard = GetNextCard();
-	Slot->CardOnDisplay = NextCard;
-	Slot->OnUpdateCard(NextCard->Image);
+	if (Slot && Slot->CardOnDisplay) 
+	{
+		Slots.Add(Slot);
+		UCard* NextCard = GetNextCard();
+		Slot->CardOnDisplay = NextCard;
+		Slot->OnUpdateCard(NextCard->Image);
+	}
+
 }
