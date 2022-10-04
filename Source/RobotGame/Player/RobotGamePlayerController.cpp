@@ -11,7 +11,7 @@ ARobotGamePlayerController::ARobotGamePlayerController()
 
 void ARobotGamePlayerController::SpawnNewCard(UCard* CardToSpawn)
 {
-	// TODO Get Position To Spawn (Convert Mouse location to World Space)
+	// TODO Get Position To Spawn (Convert Mouse location to World Space).
 
 
 	// TODO Line Trace to floor, appropriate channel
@@ -28,17 +28,15 @@ UCard* ARobotGamePlayerController::GetNextCard()
 }
 
 
-void ARobotGamePlayerController::UseCard(UCardSlotWidget* Slot)
+void ARobotGamePlayerController::ServerUseCard_Implementation(UCardSlotWidget* Slot)
 {
+// TODO Spawn Card
 
-	// TODO Spawn Card
+// TODO Queue back the card.
 
-	// TODO Queue back the card.
-
-	// TODO Get Next Card for the slot from the queue
-
-	
+// TODO Get Next Card for the slot from the queue
 }
+
 
 
 
@@ -62,6 +60,7 @@ void ARobotGamePlayerController::SetSlot(UCardSlotWidget* Slot)
 { 
 
 	// TODO Check for null (Should not be null?) 
+	
 	if (Slot && Slot->CardOnDisplay) 
 	{
 		Slots.Add(Slot);

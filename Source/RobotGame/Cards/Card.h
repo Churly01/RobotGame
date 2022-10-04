@@ -15,13 +15,20 @@ class ROBOTGAME_API UCard : public UObject
 	GENERATED_BODY()
 
 public:
+
+	// Template used to spawn a character after placing the card. 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawnable")
 	TSubclassOf<class ARobotGameCharacter> SpawnableTemplate;
+
+	// Used to spawn a spell.
 	UPROPERTY(EditDefaultsOnly, Category = "Spawnable")
 	TSubclassOf<class ASpell> SpellTemplate;
+
+	// If the template is a character or a spell
 	UPROPERTY(EditDefaultsOnly, Category = "Spawnable")
 	bool bIsCharacter;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Spawnable", Meta = (ExposeOnSpawn = true))
+	// Image to be shown by the slot widget.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawnable", Meta = (ExposeOnSpawn = true))
 	UTexture2D* Image;
 };

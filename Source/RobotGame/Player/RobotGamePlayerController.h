@@ -43,12 +43,20 @@ public:
 	// Gets the next card from the queue.
 	UCard* GetNextCard();
 
+
+
+	UFUNCTION()
+	// [SERVER + CLIENT] Does the work of playing a card.
 	void UseCard(UCardSlotWidget* Slot);
+
+	// [SERVER] Use a card. Called whenever the card NEEDS to be played.
+	UFUNCTION(Server, Reliable)
+	void ServerUseCard(UCardSlotWidget* Slot);
 
 	// Restart queue.
 	void CopyArrayIntoQueue();
 
-
+	// Sets the deck to a new array. 
 	UFUNCTION(BlueprintCallable)
 	void SetDeck(TArray<UCard*> NewDeck);
 
@@ -56,6 +64,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<UCard*> GetDeck() {return Deck;}
 
+	// Adds the slot to the array of slots. 
 	UFUNCTION(BlueprintCallable)
 	void SetSlot(class UCardSlotWidget* Slot);
 };
