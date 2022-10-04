@@ -36,12 +36,12 @@ void ARobotGamePlayerController::UseCard(UCardSlotWidget* Slot)
 
 // TODO Get Next Card for the slot from the queue
 }
-}
+
 
 void ARobotGamePlayerController::ServerUseCard_Implementation(UCardSlotWidget* Slot)
 {
 
-
+}
 
 
 
