@@ -9,15 +9,12 @@ ARobotGamePlayerController::ARobotGamePlayerController()
 	
 }
 
-void ARobotGamePlayerController::SpawnNewCard(UCard* CardToSpawn)
+
+void ARobotGamePlayerController::ServerSpawnNewCard_Implementation(UCard* CardToSpawn)
 {
-	// TODO Get Position To Spawn (Convert Mouse location to World Space).
 
 
-	// TODO Line Trace to floor, appropriate channel
-
-
-	// TODO Spawn Character
+// TODO Spawn Character
 }
 
 UCard* ARobotGamePlayerController::GetNextCard()
@@ -28,20 +25,48 @@ UCard* ARobotGamePlayerController::GetNextCard()
 }
 
 
-void ARobotGamePlayerController::UseCard(UCardSlotWidget* Slot)
+void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 {
-	// TODO Spawn Card
+	// Make sure Slot is not null (Should never be)
+	ensure(Slot);
 
-// TODO Queue back the card.
+	// Get Mouse Location in 3d space;
+	FVector WorldLoc;
+	FVector WorldDirection;
+	DeprojectMousePositionToWorld(WorldLoc, WorldDirection);
 
-// TODO Get Next Card for the slot from the queue
+
+	// Line trace to get whether we are spawning in our part of the arena.
+	
+	FHitResult HitResult;
+	FVector Start = WorldLoc;
+	FVector End = WorldLoc;
+	End += WorldDirection * 1000;
+	
+	FCollisionQueryParams QueryParams;
+
+	// Check for visibility. If its the spawn plane.
+	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
+
+
+	// Draw Card (If its a spell, draw decal to show area)
+	if (Slot->CardOnDisplay->bIsCharacter)
+	{
+
+	}
+	// If spell
+	else
+	{
+
+	}
+
+
+	// TODO Queue back the card.
+
+	// TODO Get Next Card for the slot from the queue
+
 }
 
-
-void ARobotGamePlayerController::ServerUseCard_Implementation(UCardSlotWidget* Slot)
-{
-
-}
 
 
 

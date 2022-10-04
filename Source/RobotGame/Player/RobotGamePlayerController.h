@@ -38,7 +38,9 @@ public:
 
 
 	// Spawn Card in the appropriate location
-	void SpawnNewCard(UCard* CardToSpawn);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSpawnNewCard(UCard* CardToSpawn);
 
 	// Gets the next card from the queue.
 	UCard* GetNextCard();
@@ -46,12 +48,16 @@ public:
 
 
 	UFUNCTION()
-	// [SERVER + CLIENT] Does the work of playing a card.
-	void UseCard(UCardSlotWidget* Slot);
+	// [CLIENT] Does the work of playing a card.
+	void ProjectCardOnWorld(UCardSlotWidget* Slot);
 
-	// [SERVER] Use a card. Called whenever the card NEEDS to be played.
-	UFUNCTION(Server, Reliable)
-	void ServerUseCard(UCardSlotWidget* Slot);
+
+	// TODO Add decal template for spell and character.
+	UFUNCTION(BlueprintImplementableEvent)
+	void DrawCharacterOnLocation(FVector DrawLocation);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DrawSpellOnLocation(FVector DrawLocation);
 
 	// Restart queue.
 	void CopyArrayIntoQueue();
