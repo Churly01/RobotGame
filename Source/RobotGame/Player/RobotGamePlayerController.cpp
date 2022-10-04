@@ -28,14 +28,19 @@ UCard* ARobotGamePlayerController::GetNextCard()
 }
 
 
-void ARobotGamePlayerController::ServerUseCard_Implementation(UCardSlotWidget* Slot)
+void ARobotGamePlayerController::UseCard(UCardSlotWidget* Slot)
 {
-// TODO Spawn Card
+	// TODO Spawn Card
 
 // TODO Queue back the card.
 
 // TODO Get Next Card for the slot from the queue
 }
+}
+
+void ARobotGamePlayerController::ServerUseCard_Implementation(UCardSlotWidget* Slot)
+{
+
 
 
 
