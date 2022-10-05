@@ -28,7 +28,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	UPROPERTY(EditDefaultsOnly, Category = "Time")
-	float TimeBetweenShots;
+	float TimeBetweenShots; 
 
 	// ProjectileClass to spawn
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
