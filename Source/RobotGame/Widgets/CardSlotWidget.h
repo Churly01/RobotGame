@@ -17,6 +17,8 @@ class ROBOTGAME_API UCardSlotWidget : public UUserWidget
 	
 public:
 
+	//TODO CHange card on display.
+
 	// Card to display on the slot.
 	class UCard* CardOnDisplay;
 

@@ -3,6 +3,9 @@
 
 #include "RobotGamePlayerController.h"
 #include "../Widgets/CardSlotWidget.h"
+#include "../Cards/SpawnPlane.h"
+#include "Engine/World.h"
+#include "../Cards/SpawnDecal.h"
 
 ARobotGamePlayerController::ARobotGamePlayerController()
 {
@@ -43,23 +46,43 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 	FVector End = WorldLoc;
 	End += WorldDirection * 1000;
 	
+	
+	// Make sure world is valid
+	ensure(GetWorld());
+
 	FCollisionQueryParams QueryParams;
-
 	// Check for visibility. If its the spawn plane.
-	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
+	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
 
-
-	// Draw Card (If its a spell, draw decal to show area)
-	if (Slot->CardOnDisplay->bIsCharacter)
+	// No hit
+	if(!HitResult.GetActor())
 	{
-
+		return;
 	}
-	// If spell
+	// The hit actor is not the spawn plane.
+	ASpawnPlane* SpawnPlane = Cast<ASpawnPlane>(HitResult.GetActor());
+	if (!SpawnPlane)
+	{
+		return;
+	}
+	// Get Location and rotation
+	FVector Loc = HitResult.ImpactPoint;
+	FRotator Rot = GetPawn()->GetViewRotation();
+	// Draw Card Spell or character. Place decal if its not placed.
+	//Its spawned. Just move to new direction.
+	if(ShownSpawnDecal)
+	{
+		// Change location and rotation. Set bsweep for smoother movement.
+		ShownSpawnDecal->SetActorLocation(Loc, true);
+		ShownSpawnDecal->SetActorRotation(Rot);
+	}
 	else
 	{
-
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetPawn();
+		ASpawnDecal* SpawnDecal = GetWorld()->SpawnActor<ASpawnDecal>(Slot->CardOnDisplay->SpawnDecal->GetClass(), Loc, Rot, SpawnParams);
 	}
-
 
 	// TODO Queue back the card.
 
@@ -93,6 +116,7 @@ void ARobotGamePlayerController::SetSlot(UCardSlotWidget* Slot)
 	
 	if (Slot && Slot->CardOnDisplay) 
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ADDING ELEMENT TO ARRAY"))
 		Slots.Add(Slot);
 		UCard* NextCard = GetNextCard();
 		Slot->CardOnDisplay = NextCard;

@@ -6,9 +6,9 @@
 // Sets default values
 ASpawnDecal::ASpawnDecal()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+	
+	DecalMesh = CreateDefaultSubobject<UStaticMeshComponent>("DecalMesh");
+	RootComponent = DecalMesh;
 }
 
 // Called when the game starts or when spawned

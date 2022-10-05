@@ -23,19 +23,21 @@ class ROBOTGAME_API ARobotGamePlayerController : public APlayerController
 		ARobotGamePlayerController();
 
 public:
+
+
 	// DeckSize
 	int32 DeckSize;
 	// Deck of cards.
 	TArray<UCard*> Deck;
-	
+
 	// Will start with the same cards as a deck. Used to get the next card in play. 
 	TQueue<UCard*> PlayingDeck;
 
 	// Slots where we have cards.
-
 	TArray<class UCardSlotWidget*> Slots;
-	//Delegate
 
+	
+	class ASpawnDecal* ShownSpawnDecal;
 
 	// Spawn Card in the appropriate location
 
@@ -47,7 +49,7 @@ public:
 
 
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	// [CLIENT] Does the work of playing a card.
 	void ProjectCardOnWorld(UCardSlotWidget* Slot);
 
@@ -73,4 +75,6 @@ public:
 	// Adds the slot to the array of slots. 
 	UFUNCTION(BlueprintCallable)
 	void SetSlot(class UCardSlotWidget* Slot);
+	UFUNCTION(BlueprintCallable)	
+		TArray<class UCardSlotWidget*> GetSlots()const { return Slots; }
 };

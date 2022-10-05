@@ -16,8 +16,9 @@ class ROBOTGAME_API UCard : public UObject
 
 public:
 
-	//TODO Template for the spell decal and the character decal
-
+	//Template for the spell decal and the character decal
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawnable", Meta = (ExposeOnSpawn = true))
+	TSubclassOf<class ASpawnDecal> SpawnDecal;
 	// Template used to spawn a character after placing the card. 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawnable")
 	TSubclassOf<class ARobotGameCharacter> SpawnableTemplate;
