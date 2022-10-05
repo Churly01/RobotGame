@@ -3,3 +3,7 @@
 
 #include "CardSlotWidget.h"
 
+void UCardSlotWidget::SetCardOnDisplay(UCard* NewCardOnDisplay)
+{
+	CardOnDisplay = NewCardOnDisplay;
+}

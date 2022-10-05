@@ -22,17 +22,10 @@ public:
 	// Card to display on the slot.
 	class UCard* CardOnDisplay;
 
-	class ARobotGamePlayerController* Owner;
-
-	// Set the player controller from the blueprints (Owner)
-	UFUNCTION(BlueprintCallable)
-	void SetPlayerController(ARobotGamePlayerController* PC)
-	{
-		Owner = PC;
-	}
-
 	// Called to update the image when a card is changed
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnUpdateCard(UTexture2D* NewImage);
 
+	UFUNCTION(BlueprintCallable)
+	void SetCardOnDisplay(UCard* NewCardOnDisplay);
 };
