@@ -13,6 +13,65 @@ ARobotGamePlayerController::ARobotGamePlayerController()
 }
 
 
+
+
+void ARobotGamePlayerController::IsSpawning1()
+{
+	bIsSpawning1 = true;
+	bIsSpawning2 = false;
+	bIsSpawning3 = false;
+	bIsSpawning4 = false;
+}
+
+void ARobotGamePlayerController::IsSpawning2()
+{
+	bIsSpawning1 = false;
+	bIsSpawning2 = true;
+	bIsSpawning3 = false;
+	bIsSpawning4 = false;
+}
+
+void ARobotGamePlayerController::IsSpawning3()
+{
+	bIsSpawning1 = false;
+	bIsSpawning2 = false;
+	bIsSpawning3 = true;
+	bIsSpawning4 = false;
+
+}
+
+void ARobotGamePlayerController::IsSpawning4()
+{
+	bIsSpawning1 = false;
+	bIsSpawning2 = false;
+	bIsSpawning3 = false;
+	bIsSpawning4 = true;
+}
+
+void ARobotGamePlayerController::StopSpawning()
+{
+	
+	bIsSpawning1 = false;
+	bIsSpawning2 = false;
+	bIsSpawning3 = false;
+	bIsSpawning4 = false;
+	if (ShownSpawnDecal) {
+		ShownSpawnDecal->Destroy();
+	}
+	ShownSpawnDecal->Destroy();
+	ShownSpawnDecal = nullptr;
+
+	// TODO Spawn card afterwards.
+}
+
+void ARobotGamePlayerController::Tick(float DeltaTime)
+{
+	if(bIsSpawning1)
+	{
+		ProjectCardOnWorld(Slots[0]);
+	}
+}
+
 void ARobotGamePlayerController::ServerSpawnNewCard_Implementation(UCard* CardToSpawn)
 {
 
@@ -32,11 +91,12 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 {
 	// Make sure Slot is not null (Should never be)
 	ensure(Slot);
+	ensure(GetWorld());
 
 	// Get Mouse Location in 3d space;
 	FVector WorldLoc;
-	FVector WorldDirection;
-	DeprojectMousePositionToWorld(WorldLoc, WorldDirection);
+	FRotator WorldDirection;
+	this->GetPlayerViewPoint(WorldLoc, WorldDirection);
 
 
 	// Line trace to get whether we are spawning in our part of the arena.
@@ -44,19 +104,21 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 	FHitResult HitResult;
 	FVector Start = WorldLoc;
 	FVector End = WorldLoc;
-	End += WorldDirection * 1000;
+	End += WorldDirection.Vector() * 1000;
 	
 	
 	// Make sure world is valid
-	ensure(GetWorld());
+
 
 	FCollisionQueryParams QueryParams;
+	
 	// Check for visibility. If its the spawn plane.
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
 
 	// No hit
 	if(!HitResult.GetActor())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("A"))
 		return;
 	}
 	// The hit actor is not the spawn plane.
@@ -72,16 +134,21 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 	//Its spawned. Just move to new direction.
 	if(ShownSpawnDecal)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("decal exists"))
 		// Change location and rotation. Set bsweep for smoother movement.
-		ShownSpawnDecal->SetActorLocation(Loc, true);
+		ShownSpawnDecal->SetActorLocation(Loc);
 		ShownSpawnDecal->SetActorRotation(Rot);
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("create decal"))
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		SpawnParams.Instigator = GetPawn();
-		ASpawnDecal* SpawnDecal = GetWorld()->SpawnActor<ASpawnDecal>(Slot->CardOnDisplay->SpawnDecal->GetClass(), Loc, Rot, SpawnParams);
+		// Change decal to be showing
+		
+		ShownSpawnDecal = GetWorld()->SpawnActor<ASpawnDecal>(Slot->CardOnDisplay->SpawnDecal->GetDefaultObject()->GetClass(), Loc, Rot, SpawnParams);
+		
 	}
 
 	// TODO Queue back the card.
@@ -122,5 +189,19 @@ void ARobotGamePlayerController::SetSlot(UCardSlotWidget* Slot)
 		Slot->CardOnDisplay = NextCard;
 		Slot->OnUpdateCard(NextCard->Image);
 	}
+
+
+
+}
+
+void ARobotGamePlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+	InputComponent->BindAction("Spawn1", IE_Pressed, this, &ARobotGamePlayerController::IsSpawning1);
+	InputComponent->BindAction("Spawn1", IE_Released, this, &ARobotGamePlayerController::StopSpawning);
+
+
+	// TODO Add bind to stop spawning if right clicked. 
+
 
 }

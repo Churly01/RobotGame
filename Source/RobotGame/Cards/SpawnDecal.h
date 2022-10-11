@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SpawnDecal.generated.h"
 
+
+// Actor to spawn whenever we want to place an actor
 UCLASS()
 class ROBOTGAME_API ASpawnDecal : public AActor
 {

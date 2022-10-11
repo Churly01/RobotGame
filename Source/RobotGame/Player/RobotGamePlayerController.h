@@ -22,7 +22,20 @@ class ROBOTGAME_API ARobotGamePlayerController : public APlayerController
 
 		ARobotGamePlayerController();
 
+
+private: 
+
+	bool bIsSpawning1, bIsSpawning2, bIsSpawning3, bIsSpawning4;
+
+	void IsSpawning1();
+	void IsSpawning2();
+	void IsSpawning3();
+	void IsSpawning4();
+	void StopSpawning();
+
 public:
+
+	virtual void Tick(float DeltaTime) override;
 
 
 	// DeckSize
@@ -76,5 +89,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetSlot(class UCardSlotWidget* Slot);
 	UFUNCTION(BlueprintCallable)	
-		TArray<class UCardSlotWidget*> GetSlots()const { return Slots; }
+	TArray<class UCardSlotWidget*> GetSlots()const { return Slots; }
+
+
+	virtual void SetupInputComponent() override;
 };
