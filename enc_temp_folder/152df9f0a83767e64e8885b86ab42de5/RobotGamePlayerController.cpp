@@ -6,7 +6,6 @@
 #include "../Cards/SpawnPlane.h"
 #include "Engine/World.h"
 #include "../Cards/SpawnDecal.h"
-#include "GameFramework/Actor.h"
 
 ARobotGamePlayerController::ARobotGamePlayerController()
 {
@@ -130,8 +129,7 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 	}
 	// Get Location and rotation
 	FVector Loc = HitResult.ImpactPoint;
-	FRotator Rot = GetPawn()->GetActorRotation();
-	Rot.Add(0, -90, 0);
+	FRotator Rot = GetPawn()->GetViewRotation();
 	// Draw Card Spell or character. Place decal if its not placed.
 	//Its spawned. Just move to new direction.
 	if(ShownSpawnDecal)
