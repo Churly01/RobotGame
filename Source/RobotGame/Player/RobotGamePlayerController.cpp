@@ -88,6 +88,12 @@ UCard* ARobotGamePlayerController::GetNextCard()
 }
 
 
+
+void ARobotGamePlayerController::SpawnCard()
+{
+
+}
+
 void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 {
 	// Make sure Slot is not null (Should never be)
@@ -152,10 +158,7 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 		ShownSpawnDecal = GetWorld()->SpawnActor<ASpawnDecal>(Slot->CardOnDisplay->SpawnDecal->GetDefaultObject()->GetClass(), Loc, Rot, SpawnParams);
 		
 	}
-
-	// TODO Queue back the card.
-
-	// TODO Get Next Card for the slot from the queue
+	
 
 }
 
@@ -202,6 +205,8 @@ void ARobotGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction("Spawn1", IE_Pressed, this, &ARobotGamePlayerController::IsSpawning1);
 	InputComponent->BindAction("Spawn1", IE_Released, this, &ARobotGamePlayerController::StopSpawning);
 
+	// Spawn card
+	InputComponent->BindAction("SpawnCard", IE_Pressed, this, &ARobotGamePlayerController::SpawnCard);
 
 	// TODO Add bind to stop spawning if right clicked. 
 

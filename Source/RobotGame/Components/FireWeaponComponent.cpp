@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Camera/CameraComponent.h"
+#include "../Player/RobotGamePlayerController.h"
 
 
 // Sets default values for this component's properties
@@ -47,6 +48,7 @@ void UFireWeaponComponent::SpawnProjectile(FRotator PlayerRotation)
 {
 	if(!CanFire())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ERROR NO SE PUEDE DISPARAR"));
 		return;
 	}
 	UWorld* World = GetWorld();
@@ -80,6 +82,8 @@ void UFireWeaponComponent::SpawnProjectile(FRotator PlayerRotation)
 bool UFireWeaponComponent::CanFire()
 {
 	bool IsFalling = PlayerPawn->GetMovementComponent()->IsFalling();
-	return !IsFalling;
+	ARobotGamePlayerController* PlayerController = Cast<ARobotGamePlayerController>(PlayerPawn->GetController());
+	bool IsSpawning = PlayerController->isSpawningCard();
+	return !IsFalling && !IsSpawning;
 }
 

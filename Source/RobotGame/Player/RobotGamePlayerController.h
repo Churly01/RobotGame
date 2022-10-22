@@ -61,6 +61,7 @@ public:
 	UCard* GetNextCard();
 
 
+	void SpawnCard();
 
 	UFUNCTION(BlueprintCallable)
 	// [CLIENT] Does the work of playing a card.
@@ -91,6 +92,12 @@ public:
 	UFUNCTION(BlueprintCallable)	
 	TArray<class UCardSlotWidget*> GetSlots()const { return Slots; }
 
-
+	bool isSpawningCard() {
+		return bIsSpawning1 ||
+				bIsSpawning2 ||
+				bIsSpawning3 ||
+				bIsSpawning4;
+	}
+	
 	virtual void SetupInputComponent() override;
 };
