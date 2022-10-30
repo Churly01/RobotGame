@@ -6,4 +6,8 @@
 void UCardSlotWidget::SetCardOnDisplay(UCard* NewCardOnDisplay)
 {
 	CardOnDisplay = NewCardOnDisplay;
+	if (CardOnDisplay && CardOnDisplay->Image) {
+		OnUpdateCard(CardOnDisplay->Image);
+	}
+	
 }

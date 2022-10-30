@@ -57,12 +57,17 @@ void ARobotGamePlayerController::StopSpawning()
 	
 	if(CardsInfo.CardSlot !=0)
 	{
+		/*Should spawn a card. In that case, enqueue the last card and get the next card.*/
 		SpawnCard(CardsInfo.CardToSpawn, CardsInfo.Loc);
+		Enqueue(CardsInfo.CardToSpawn);
+		Slots[CardsInfo.CardSlot-1]->SetCardOnDisplay(GetNextCard());
+
 	}
 	
 	CardsInfo.CardSlot = 0; 
 	CardsInfo.CardToSpawn = nullptr;
-	if (ShownSpawnDecal) {
+	if (ShownSpawnDecal) 
+	{
 		ShownSpawnDecal->Destroy();
 	}
 	ShownSpawnDecal = nullptr;
@@ -81,6 +86,25 @@ void ARobotGamePlayerController::Tick(float DeltaTime)
 
 
 
+void ARobotGamePlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ARobotGamePlayerController, Deck);
+}
+
+UCard* ARobotGamePlayerController::Dequeue()
+{
+	UCard* card = Deck[0];
+	Deck.RemoveAt(0);
+	return card;
+}
+
+void ARobotGamePlayerController::Enqueue(UCard* Card)
+{
+	Deck.Add(Card);
+}
+
 void ARobotGamePlayerController::ServerSpawnNewCard_Implementation(UCard* CardToSpawn, FVector Loc)
 {
 	SpawnCard(CardToSpawn, Loc);
@@ -88,9 +112,7 @@ void ARobotGamePlayerController::ServerSpawnNewCard_Implementation(UCard* CardTo
 
 UCard* ARobotGamePlayerController::GetNextCard()
 {
-	UCard* Card;
-	PlayingDeck.Dequeue(Card);
-	return Card;
+	return Dequeue();;
 }
 
 
@@ -184,29 +206,16 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 		
 	}
 
-	/*Setting apropiate position of the decal.*/
+	/*Setting appropriate position of the decal.*/
 	CardsInfo.Loc = Loc;
 	CardsInfo.Rot = Rot;
 
 }
 
 
-
-
-void ARobotGamePlayerController::CopyArrayIntoQueue()
-{
-	// We copy the array into the newly created queue.
-	PlayingDeck.Empty();
-	for (UCard* Card : Deck)
-	{
-		PlayingDeck.Enqueue(Card);
-	}
-}
-
 void ARobotGamePlayerController::SetDeck(TArray<UCard*> NewDeck)
 {
 	Deck = NewDeck;
-	CopyArrayIntoQueue();
 }
 
 void ARobotGamePlayerController::SetSlot(UCardSlotWidget* Slot)
@@ -214,7 +223,7 @@ void ARobotGamePlayerController::SetSlot(UCardSlotWidget* Slot)
 
 	// TODO Check for null (Should not be null?) 
 	
-	if (Slot && Slot->CardOnDisplay) 
+	if (Slot) 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ADDING ELEMENT TO ARRAY"))
 		Slots.Add(Slot);
@@ -231,6 +240,9 @@ void ARobotGamePlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	InputComponent->BindAction("Spawn1", IE_Pressed, this, &ARobotGamePlayerController::SpawnAt1);
+	InputComponent->BindAction("Spawn1", IE_Pressed, this, &ARobotGamePlayerController::SpawnAt2);
+	InputComponent->BindAction("Spawn1", IE_Pressed, this, &ARobotGamePlayerController::SpawnAt3);
+	InputComponent->BindAction("Spawn1", IE_Pressed, this, &ARobotGamePlayerController::SpawnAt4);
 	InputComponent->BindAction("Spawn1", IE_Released, this, &ARobotGamePlayerController::StopSpawning);
 
 

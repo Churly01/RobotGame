@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "../Cards/Card.h"
+#include "Net/UnrealNetwork.h"
+#include "Containers/Queue.h"
 #include "RobotGamePlayerController.generated.h"
 
 /**
@@ -51,14 +53,24 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
+
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UCard* Dequeue();
+
+	void Enqueue(UCard* Card);
+
+
+
 	// DeckSize
 	int32 DeckSize;
 	// Deck of cards.
+
+	UPROPERTY(Replicated)
 	TArray<UCard*> Deck;
 
-	// Will start with the same cards as a deck. Used to get the next card in play. 
-	TQueue<UCard*> PlayingDeck;
-
+	// Will start with the same cards as a deck. Used to get the next card in play.
 	// Slots where we have cards.
 	TArray<class UCardSlotWidget*> Slots;
 
@@ -71,6 +83,8 @@ public:
 	void ServerSpawnNewCard(UCard* CardToSpawn, FVector Loc);
 
 	// Gets the next card from the queue.
+
+	UFUNCTION(BlueprintCallable)
 	UCard* GetNextCard();
 
 
@@ -88,8 +102,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void DrawSpellOnLocation(FVector DrawLocation);
 
-	// Restart queue.
-	void CopyArrayIntoQueue();
 
 	// Sets the deck to a new array. 
 	UFUNCTION(BlueprintCallable)
