@@ -63,9 +63,11 @@ void ARobotGamePlayerController::StopSpawning()
 		Slots[CardsInfo.CardSlot-1]->SetCardOnDisplay(GetNextCard());
 
 	}
-	
+	/* Set the struct to the default values again. */
 	CardsInfo.CardSlot = 0; 
 	CardsInfo.CardToSpawn = nullptr;
+
+	// If the decal still exists, destroy it. 
 	if (ShownSpawnDecal) 
 	{
 		ShownSpawnDecal->Destroy();
@@ -79,7 +81,7 @@ void ARobotGamePlayerController::Tick(float DeltaTime)
 {
 	if(CardsInfo.CardSlot !=0)
 	{
-		ProjectCardOnWorld(Slots[CardsInfo.CardSlot]);
+		ProjectCardOnWorld(Slots[CardsInfo.CardSlot-1]);
 	}
 	
 }
@@ -170,8 +172,11 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 
 	// No hit
 	if(!HitResult.GetActor())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("A"))
+	{	
+
+		// If there is a DECAL and there should not be (Maybe, out of range). Destroy decal. 
+
+		UE_LOG(LogTemp, Warning, TEXT("Spawn out of range"))
 		return;
 	}
 	// The hit actor is not the spawn plane.
@@ -192,6 +197,7 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 		// Change location and rotation. Set bsweep for smoother movement.
 		ShownSpawnDecal->SetActorLocation(Loc);
 		ShownSpawnDecal->SetActorRotation(Rot);
+		ShownSpawnDecal->SetHidden(false);
 		
 	}
 	else
