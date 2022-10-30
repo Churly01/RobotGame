@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "../Cards/SpawnDecal.h"
 #include "GameFramework/Actor.h"
+#include "RobotGameCharacter.h"
 
 ARobotGamePlayerController::ARobotGamePlayerController()
 {
@@ -16,68 +17,73 @@ ARobotGamePlayerController::ARobotGamePlayerController()
 
 
 
-void ARobotGamePlayerController::IsSpawning1()
+void ARobotGamePlayerController::SetCardToSpawn(int32 SlotNum)
 {
-	bIsSpawning1 = true;
-	bIsSpawning2 = false;
-	bIsSpawning3 = false;
-	bIsSpawning4 = false;
+	if(SlotNum == 0)
+	{
+		CardsInfo.CardSlot = 0;
+		CardsInfo.CardToSpawn = nullptr;
+		return;
+	}
+	CardsInfo.CardSlot = SlotNum;
+	CardsInfo.CardToSpawn = Slots[SlotNum-1]->CardOnDisplay;
 }
 
-void ARobotGamePlayerController::IsSpawning2()
+void ARobotGamePlayerController::SpawnAt1()
 {
-	bIsSpawning1 = false;
-	bIsSpawning2 = true;
-	bIsSpawning3 = false;
-	bIsSpawning4 = false;
+	SetCardToSpawn(1);
 }
 
-void ARobotGamePlayerController::IsSpawning3()
+void ARobotGamePlayerController::SpawnAt2()
 {
-	bIsSpawning1 = false;
-	bIsSpawning2 = false;
-	bIsSpawning3 = true;
-	bIsSpawning4 = false;
-
+	SetCardToSpawn(2);
 }
 
-void ARobotGamePlayerController::IsSpawning4()
+
+void ARobotGamePlayerController::SpawnAt3()
 {
-	bIsSpawning1 = false;
-	bIsSpawning2 = false;
-	bIsSpawning3 = false;
-	bIsSpawning4 = true;
+	SetCardToSpawn(3);
 }
+
+
+void ARobotGamePlayerController::SpawnAt4()
+{
+	SetCardToSpawn(4);
+}
+
 
 void ARobotGamePlayerController::StopSpawning()
 {
 	
-	bIsSpawning1 = false;
-	bIsSpawning2 = false;
-	bIsSpawning3 = false;
-	bIsSpawning4 = false;
+	if(CardsInfo.CardSlot !=0)
+	{
+		SpawnCard(CardsInfo.CardToSpawn, CardsInfo.Loc);
+	}
+	
+	CardsInfo.CardSlot = 0; 
+	CardsInfo.CardToSpawn = nullptr;
 	if (ShownSpawnDecal) {
 		ShownSpawnDecal->Destroy();
 	}
-	ShownSpawnDecal->Destroy();
 	ShownSpawnDecal = nullptr;
 
-	// TODO Spawn card afterwards.
+	
 }
 
 void ARobotGamePlayerController::Tick(float DeltaTime)
 {
-	if(bIsSpawning1)
+	if(CardsInfo.CardSlot !=0)
 	{
-		ProjectCardOnWorld(Slots[0]);
+		ProjectCardOnWorld(Slots[CardsInfo.CardSlot]);
 	}
+	
 }
 
-void ARobotGamePlayerController::ServerSpawnNewCard_Implementation(UCard* CardToSpawn)
+
+
+void ARobotGamePlayerController::ServerSpawnNewCard_Implementation(UCard* CardToSpawn, FVector Loc)
 {
-
-
-// TODO Spawn Character
+	SpawnCard(CardToSpawn, Loc);
 }
 
 UCard* ARobotGamePlayerController::GetNextCard()
@@ -89,8 +95,26 @@ UCard* ARobotGamePlayerController::GetNextCard()
 
 
 
-void ARobotGamePlayerController::SpawnCard()
+void ARobotGamePlayerController::SpawnCard(UCard* CardToSpawn, FVector Loc)
 {
+	if(HasAuthority())
+	{
+		UWorld* World = GetWorld();
+
+		if (World && CardToSpawn)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("SPAWNING CARD"))
+			FRotator rot;
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.bNoFail = true; 
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			World->SpawnActor<ARobotGameCharacter>(CardToSpawn->SpawnableTemplate->GetDefaultObject()->GetClass(), Loc, rot, SpawnParams);
+		}
+
+	}
+	else {
+		ServerSpawnNewCard(CardToSpawn,Loc);
+	}
 
 }
 
@@ -146,6 +170,7 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 		// Change location and rotation. Set bsweep for smoother movement.
 		ShownSpawnDecal->SetActorLocation(Loc);
 		ShownSpawnDecal->SetActorRotation(Rot);
+		
 	}
 	else
 	{
@@ -158,7 +183,10 @@ void ARobotGamePlayerController::ProjectCardOnWorld(UCardSlotWidget* Slot)
 		ShownSpawnDecal = GetWorld()->SpawnActor<ASpawnDecal>(Slot->CardOnDisplay->SpawnDecal->GetDefaultObject()->GetClass(), Loc, Rot, SpawnParams);
 		
 	}
-	
+
+	/*Setting apropiate position of the decal.*/
+	CardsInfo.Loc = Loc;
+	CardsInfo.Rot = Rot;
 
 }
 
@@ -202,11 +230,9 @@ void ARobotGamePlayerController::SetSlot(UCardSlotWidget* Slot)
 void ARobotGamePlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	InputComponent->BindAction("Spawn1", IE_Pressed, this, &ARobotGamePlayerController::IsSpawning1);
+	InputComponent->BindAction("Spawn1", IE_Pressed, this, &ARobotGamePlayerController::SpawnAt1);
 	InputComponent->BindAction("Spawn1", IE_Released, this, &ARobotGamePlayerController::StopSpawning);
 
-	// Spawn card
-	InputComponent->BindAction("SpawnCard", IE_Pressed, this, &ARobotGamePlayerController::SpawnCard);
 
 	// TODO Add bind to stop spawning if right clicked. 
 

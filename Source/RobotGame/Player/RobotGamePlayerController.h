@@ -15,6 +15,17 @@
 // Create Delegate. Will be called whenever a card is spawn in order to delete the card and get the new one in the appropriate slot.
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCardUsed, int32, CardSlot);
 
+
+USTRUCT()
+struct FSpawningCardInfo
+{
+	GENERATED_USTRUCT_BODY();
+	UCard* CardToSpawn = nullptr;
+	int32 CardSlot = 0;
+	FVector Loc;
+	FRotator Rot;
+};
+
 UCLASS()
 class ROBOTGAME_API ARobotGamePlayerController : public APlayerController
 {
@@ -25,16 +36,18 @@ class ROBOTGAME_API ARobotGamePlayerController : public APlayerController
 
 private: 
 
-	bool bIsSpawning1, bIsSpawning2, bIsSpawning3, bIsSpawning4;
 
-	void IsSpawning1();
-	void IsSpawning2();
-	void IsSpawning3();
-	void IsSpawning4();
+	void SetCardToSpawn(int32 SlotNum);
+
+	void SpawnAt1();
+	void SpawnAt2();
+	void SpawnAt3();
+	void SpawnAt4();
+
 	void StopSpawning();
 
 public:
-
+	FSpawningCardInfo CardsInfo;
 	virtual void Tick(float DeltaTime) override;
 
 
@@ -55,13 +68,13 @@ public:
 	// Spawn Card in the appropriate location
 
 	UFUNCTION(Server, Reliable)
-	void ServerSpawnNewCard(UCard* CardToSpawn);
+	void ServerSpawnNewCard(UCard* CardToSpawn, FVector Loc);
 
 	// Gets the next card from the queue.
 	UCard* GetNextCard();
 
 
-	void SpawnCard();
+	void SpawnCard(UCard* CardToSpawn, FVector Loc);
 
 	UFUNCTION(BlueprintCallable)
 	// [CLIENT] Does the work of playing a card.
@@ -93,10 +106,7 @@ public:
 	TArray<class UCardSlotWidget*> GetSlots()const { return Slots; }
 
 	bool isSpawningCard() {
-		return bIsSpawning1 ||
-				bIsSpawning2 ||
-				bIsSpawning3 ||
-				bIsSpawning4;
+		return CardsInfo.CardSlot != 0;
 	}
 	
 	virtual void SetupInputComponent() override;

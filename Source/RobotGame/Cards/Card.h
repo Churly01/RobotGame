@@ -15,7 +15,10 @@ class ROBOTGAME_API UCard : public UObject
 	GENERATED_BODY()
 
 public:
-
+	bool IsSupportedForNetworking() const override
+	{
+		return true;
+	}
 	//Template for the spell decal and the character decal
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawnable", Meta = (ExposeOnSpawn = true))
 	TSubclassOf<class ASpawnDecal> SpawnDecal;
