@@ -20,7 +20,7 @@ public:
 		return true;
 	}
 	//Template for the spell decal and the character decal
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawnable", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawnable")
 	TSubclassOf<class ASpawnDecal> SpawnDecal;
 	// Template used to spawn a character after placing the card. 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawnable")
@@ -35,6 +35,6 @@ public:
 	bool bIsCharacter;
 
 	// Image to be shown by the slot widget.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawnable", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawnable")
 	UTexture2D* Image;
 };

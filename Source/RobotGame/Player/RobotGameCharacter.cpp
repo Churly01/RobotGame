@@ -81,7 +81,7 @@ bool ARobotGameCharacter::IsInteracting()
 void ARobotGameCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	PerformInteractionCheck();
+	//PerformInteractionCheck();
 }
 
 void ARobotGameCharacter::FireWeapon(FRotator PlayerRotation)
@@ -141,6 +141,7 @@ float ARobotGameCharacter::ModifyHealth(float HealthDelta)
 	{
 		Killer = this;
 		OnRepKiller();
+		Health = 0;
 		ActualHealthDelta = HealthDelta - Health;
 		
 	}
