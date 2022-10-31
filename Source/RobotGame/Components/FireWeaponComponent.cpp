@@ -71,10 +71,14 @@ void UFireWeaponComponent::SpawnProjectile(FRotator PlayerRotation)
 		}
 		SpawnParams.Owner = GetOwner();
 		AWeaponProjectile* ProjectileToSpawn = World->SpawnActor<AWeaponProjectile>(ProjectileClass, Loc, PlayerRotation,SpawnParams);
+		
+		if (PlayerPawn->FiringMontage) {
+			PlayerPawn->GetMesh()->PlayAnimation(PlayerPawn->FiringMontage, false);
+		}
+		
+	
 
 
-		//Get Movement Component and give velocity.
-		UProjectileMovementComponent* ProjectileMovement = ProjectileToSpawn->GetProjectileMovementComponent();
 
 	}
 }

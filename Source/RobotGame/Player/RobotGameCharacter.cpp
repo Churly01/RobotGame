@@ -124,11 +124,18 @@ void ARobotGameCharacter::OnRepHealth()
 
 float ARobotGameCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float DamageGiven = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-	
-	ModifyHealth(-DamageGiven);
 
-	return DamageGiven;
+	if (bCanReceiveDamage) {
+		
+		float DamageGiven = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+		ModifyHealth(-DamageGiven);
+
+		return DamageGiven;
+
+	}
+	return 0;
+
 }
 
 float ARobotGameCharacter::ModifyHealth(float HealthDelta)

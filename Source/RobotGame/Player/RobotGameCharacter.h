@@ -18,6 +18,8 @@ struct FInteractionData
 		bInteractHeld = false;
 	}
 
+
+
 	// The current interactable the player is viewing if any
 	UPROPERTY()
 		class UInteractionComponent* ViewedInteractable;
@@ -47,8 +49,12 @@ class ARobotGameCharacter : public ACharacter
 	class USkeletalMeshComponent* WeaponMesh;
 
 public:
-	ARobotGameCharacter();
 
+	UPROPERTY(EditDefaultsOnly)
+	bool bCanReceiveDamage = true;
+	ARobotGameCharacter();
+	UPROPERTY(EditDefaultsOnly,Category = "Animation")
+	class UAnimSequence* FiringMontage;
 
 	void GetLifetimeReplicatedProps  (TArray<FLifetimeProperty>& OutLifetimeProps)const override;
 
